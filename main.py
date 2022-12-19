@@ -63,8 +63,8 @@ class Dataset:
 
     """
 
-    CLASSES = ['sky', 'building', 'pole', 'road', 'pavement',
-               'tree', 'signsymbol', 'fence', 'car',
+    CLASSES = ['sky', 'building', 'pole', 'pavement',
+               'tree', 'signsymbol', 'fence', 'car', 'detail 3',
                'pedestrian', 'bicyclist', 'unlabelled']
 
     def __init__(
@@ -159,12 +159,12 @@ class Dataloder(keras.utils.Sequence):
 
 
 # Lets look at data we have
-dataset = Dataset(x_train_dir, y_train_dir, classes=['car', 'pedestrian'])
+dataset = Dataset(x_train_dir, y_train_dir, classes=['detail 3'])
 
-image, mask = dataset[76]  # get some sample
+image, mask = dataset[0]  # get some sample
 visualize(
     image=image,
-    cars_mask=mask[..., 0].squeeze(),
-    sky_mask=mask[..., 1].squeeze(),
-    background_mask=mask[..., 2].squeeze(),
+    mask=mask[..., 0].squeeze(),
+    # sky_mask=mask[..., 1].squeeze(),
+    # background_mask=mask[..., 2].squeeze(),
 )
