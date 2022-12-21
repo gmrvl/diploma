@@ -63,9 +63,8 @@ class Dataset:
 
     """
 
-    CLASSES = ['sky', 'building', 'pole', 'pavement',
-               'tree', 'signsymbol', 'fence', 'car', 'detail 3',
-               'pedestrian', 'bicyclist', 'unlabelled']
+    CLASSES = ['detail 1', 'detail 2', 'detail 3', 'detail 4',
+               'detail 5', 'unlabelled']
 
     def __init__(
             self,

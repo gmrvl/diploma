@@ -10,9 +10,10 @@ from main import Dataset, x_train_dir, y_train_dir, x_valid_dir, y_valid_dir, Da
 
 BACKBONE = 'efficientnetb3'
 BATCH_SIZE = 8
-CLASSES = ['car']
+CLASSES = ['detail 1', 'detail 2', 'detail 3', 'detail 4',
+               'detail 5', 'unlabelled']
 LR = 0.0001
-EPOCHS = 40
+EPOCHS = 20
 
 preprocess_input = sm.get_preprocessing(BACKBONE)
 
