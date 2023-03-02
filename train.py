@@ -6,19 +6,18 @@ from tensorflow import keras
 from argumentations import get_training_augmentation, get_preprocessing, get_validation_augmentation
 from main import Dataset, x_train_dir, y_train_dir, x_valid_dir, y_valid_dir, Dataloder
 
-# sm.set_framework('keras')
 
 BACKBONE = 'efficientnetb3'
 BATCH_SIZE = 8
 CLASSES = ['detail 1', 'detail 2', 'detail 3', 'detail 4',
-               'detail 5', 'unlabelled']
+               'detail 5']
 LR = 0.0001
 EPOCHS = 20
 
 preprocess_input = sm.get_preprocessing(BACKBONE)
 
 # define network parameters
-n_classes = 1 if len(CLASSES) == 1 else (len(CLASSES) + 1)  # case for binary and multiclass segmentation
+n_classes = 1 if len(CLASSES) == 1 else (len(CLASSES))  # case for binary and multiclass segmentation
 activation = 'sigmoid' if n_classes == 1 else 'softmax'
 
 #create model
@@ -46,7 +45,7 @@ train_dataset = Dataset(
     y_train_dir,
     classes=CLASSES,
     augmentation=get_training_augmentation(),
-    preprocessing= get_preprocessing(preprocess_input),
+    preprocessing=get_preprocessing(preprocess_input),
 )
 
 # Dataset for validation images

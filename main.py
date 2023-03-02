@@ -6,8 +6,8 @@ import keras
 import numpy as np
 import matplotlib.pyplot as plt
 
-DATA_DIR = './data/CamVid/'
-
+DATA_DIR = './data_my_dataset'
+# os.startfile(r'.\data_my_dataset\train\0img.png')
 # load repo with data if it is not exists
 if not os.path.exists(DATA_DIR):
     print('Loading data...')
@@ -29,12 +29,22 @@ def visualize(**images):
     """PLot images in one row."""
     n = len(images)
     plt.figure(figsize=(16, 5))
-    for i, (name, image) in enumerate(images.items()):
-        plt.subplot(1, n, i + 1)
-        plt.xticks([])
-        plt.yticks([])
-        plt.title(' '.join(name.split('_')).title())
-        plt.imshow(image)
+    # print(images)
+
+    image = images.get('image')
+    mask = images.get('mask')
+
+    # print(images)
+
+    # for i, (name, image) in enumerate(images.items()):
+    #     plt.subplot(1, n, i + 1)
+    #     plt.xticks([])
+    #     plt.yticks([])
+    #     plt.title(' '.join(name.split('_')).title())
+    #     plt.imshow(image)
+
+    # print(mask.shape)
+    plt.imshow(mask)
     plt.show()
 
 
@@ -64,7 +74,7 @@ class Dataset:
     """
 
     CLASSES = ['detail 1', 'detail 2', 'detail 3', 'detail 4',
-               'detail 5', 'unlabelled']
+               'detail 5']
 
     def __init__(
             self,
@@ -75,11 +85,15 @@ class Dataset:
             preprocessing=None,
     ):
         self.ids = os.listdir(images_dir)
+        self.mids = os.listdir(masks_dir)
         self.images_fps = [os.path.join(images_dir, image_id) for image_id in self.ids]
-        self.masks_fps = [os.path.join(masks_dir, image_id) for image_id in self.ids]
+        self.masks_fps = [os.path.join(masks_dir, mask_id) for mask_id in self.mids]
 
         # convert str names to class values on masks
-        self.class_values = [self.CLASSES.index(cls.lower()) for cls in classes]
+
+        # self.class_values = [self.CLASSES.index(cls.lower()) for cls in classes]
+        self.class_values = [14.0, 113.0, 52.0, 89.0, 128.0]
+        # print('VALUES', self.class_values)
 
         self.augmentation = augmentation
         self.preprocessing = preprocessing
@@ -90,15 +104,17 @@ class Dataset:
         image = cv2.imread(self.images_fps[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         mask = cv2.imread(self.masks_fps[i], 0)
-
-        # extract certain classes from mask (e.g. cars)
+        # print('MASK', mask)
+        # plt.imshow(mask)
+        # plt.show()
+        # # extract certain classes from mask (e.g. cars)
         masks = [(mask == v) for v in self.class_values]
         mask = np.stack(masks, axis=-1).astype('float')
 
         # add background if mask is not binary
-        if mask.shape[-1] != 1:
-            background = 1 - mask.sum(axis=-1, keepdims=True)
-            mask = np.concatenate((mask, background), axis=-1)
+        # if mask.shape[-1] != 1:
+        #     background = 1 - mask.sum(axis=-1, keepdims=True)
+        #     mask = np.concatenate((mask, background), axis=-1)
 
         # apply augmentations
         if self.augmentation:
@@ -158,12 +174,15 @@ class Dataloder(keras.utils.Sequence):
 
 
 # Lets look at data we have
-dataset = Dataset(x_train_dir, y_train_dir, classes=['detail 3'])
+dataset = Dataset(x_train_dir, y_train_dir, classes=['detail 1', 'detail 2', 'detail 3', 'detail 4',
+               'detail 5'])
 
-image, mask = dataset[0]  # get some sample
-visualize(
-    image=image,
-    mask=mask[..., 0].squeeze(),
-    # sky_mask=mask[..., 1].squeeze(),
-    # background_mask=mask[..., 2].squeeze(),
-)
+image, mask = dataset[40]  # get some sample
+
+# visualize(
+#     image=image,
+#     mask=mask,
+#     # mask=mask,
+#     # sky_mask=mask[..., 1].squeeze(),
+#     # background_mask=mask[..., 2].squeeze(),
+# )
