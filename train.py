@@ -12,7 +12,7 @@ BATCH_SIZE = 8
 CLASSES = ['detail 1', 'detail 2', 'detail 3', 'detail 4',
                'detail 5']
 LR = 0.0001
-EPOCHS = 20
+EPOCHS = 40
 
 preprocess_input = sm.get_preprocessing(BACKBONE)
 
@@ -45,7 +45,7 @@ train_dataset = Dataset(
     y_train_dir,
     classes=CLASSES,
     augmentation=get_training_augmentation(),
-    preprocessing=get_preprocessing(preprocess_input),
+    preprocessing=Dataset.resize(get_preprocessing(preprocess_input)),
 )
 
 # Dataset for validation images
@@ -54,7 +54,7 @@ valid_dataset = Dataset(
     y_valid_dir,
     classes=CLASSES,
     augmentation=get_validation_augmentation(),
-    preprocessing=get_preprocessing(preprocess_input),
+    preprocessing=Dataset.resize(get_preprocessing(preprocess_input)),
 )
 
 train_dataloader = Dataloder(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
@@ -73,7 +73,7 @@ callbacks = [
 
 # train model
 
-history = model.fit_generator(
+history = model.fit(
     train_dataloader,
     steps_per_epoch=len(train_dataloader),
     epochs=EPOCHS,

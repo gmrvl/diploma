@@ -98,12 +98,30 @@ class Dataset:
         self.augmentation = augmentation
         self.preprocessing = preprocessing
 
-    def __getitem__(self, i):
+    @staticmethod
+    def resize(func):
+        w = 320
+        h = 320
 
+        def res(image, mask):
+            sample = func(image=image, mask=mask)
+            image, mask = sample['image'], sample['mask']
+            image = cv2.resize(image, (w, h))
+            mask = cv2.resize(mask, (w, h))
+            return {"image": image, "mask": mask}
+
+        return res
+
+    def __getitem__(self, i):
+        w = 1920
+        h = 1080
         # read data
         image = cv2.imread(self.images_fps[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         mask = cv2.imread(self.masks_fps[i], 0)
+        image = cv2.resize(image, (w, h))
+        image = image[:, :, :4]
+        mask = cv2.resize(mask, (w, h))
         # print('MASK', mask)
         # plt.imshow(mask)
         # plt.show()
