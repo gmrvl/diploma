@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 from tensorflow import keras
 # from classification_models import keras
 
-from argumentations import get_training_augmentation, get_preprocessing, get_validation_augmentation
+from augmentations import get_training_augmentation, get_preprocessing, get_validation_augmentation
 from main import Dataset, x_train_dir, y_train_dir, x_valid_dir, y_valid_dir, Dataloder
 
 
